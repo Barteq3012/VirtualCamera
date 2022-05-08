@@ -15,7 +15,9 @@ width = 900  # szerokosc okna
 height = 500  # wysokosc okna
 line_width = 1  # szerokosc pojedynczej linii
 disappearance = 0  # prog zanikania krawedzi
-window = pyglet.window.Window(width, height)  # szerokosc, wysokosc
+config = pyglet.gl.Config(sample_buffers=1, samples=8, double_buffer=True)
+window = pyglet.window.Window(
+    width, height, config=config)  # szerokosc, wysokosc
 batch = pyglet.graphics.Batch()
 point_list = []  # lista punktow 3d
 shape = []  # ksztalty
@@ -299,12 +301,6 @@ def update(dt):
             continue
         pkt1 = lines2d[n].p1
         pkt2 = lines2d[n].p2
-        '''
-        ad = f/300
-        if f < 0:
-            ad = 0.0
-        line_width = 1 + ad  # sposób na zwiększenie imersji?
-        '''
         shape.append(shapes.Line(pkt1.x, pkt1.y, pkt2.x, pkt2.y,
                      width=line_width, color=colors[math.floor(n/12)], batch=batch))
 
@@ -315,6 +311,8 @@ pyglet.clock.schedule_interval(update, 1/refreshRate)
 @window.event
 def on_draw():
     window.clear()
+    pyglet.gl.glEnable(pyglet.gl.GL_LINE_SMOOTH)
+    pyglet.gl.glHint(pyglet.gl.GL_LINE_SMOOTH_HINT, pyglet.gl.GL_NICEST)
     batch.draw()
 
 
